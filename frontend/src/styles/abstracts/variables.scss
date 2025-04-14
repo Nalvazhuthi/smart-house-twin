@@ -15,52 +15,37 @@
 // ========================================================================
 // Colors
 // ========================================================================
+// --lavender: #ADB2D4;
+// --mist: #C7D9DD;
+// --mint: #D5E5D5;
+// --cream: #EEF1DA;
+// --text-color: #4A4E69;
+// --light-text: #F9F9F9;
+// --transition: all 0.4s ease-in-out;
 
-// Text colors
-$text-color: #2b3344; // Primary text color
-$text-disabled: #b7b7c6; // Disabled text color
-$input-text-color: #595965; // Input field text color
+$accent-color: #ADB2D4;
+$secondary-color: #BDB2FF;
+$primary-color: #5C6BC0;
 
-$text-color-dark: #f3f3fd; // Primary text color for dark mode
-$text-disabled-dark: #6f6f7a; // Disabled text color for dark mode
-$input-text-color-dark: #b5b5c8; // Input field text color for dark mode
+$background-color: linear-gradient(135deg, #D5E5D5 0%, #C7D9DD 100%);
+$btn-background-color: linear-gradient(135deg, #a8bcbf 0%, #98aeb4 100%);
 
-// Accent colors
-$accent-color: #6f42c1; // Primary accent color
-$accent-color-dark: #c4abf1; // Primary accent color for dark mode
-$highlight-accent-color: #e0dfff; // Highlighted accent for light mode
-$highlight-accent-color-dark: #403e6a; // Highlighted accent for dark mode
+$text-color: #2E2E2E;
+$light-text: #FFFFFF;
 
-// Background colors
-$background-color: #fcfdfd; // Main background color
-$background-color-dark: #19191d; // Main background color for dark mode
-$background-color-secondary: #e1e0ff80; // Secondary background color
-$background-color-secondary-dark: #39394f99; // Secondary background color for dark mode
-$background-color-gray: #f3f3f3; // Main background color
-$background-color-gray-dark: #232323; // Main background color for dark mode
+$input-bg: rgba(255, 255, 255, 0.9);
+$input-border: rgba(0, 0, 0, 0.1);
+$input-shadow: rgba(255, 255, 255, 0.4);
 
-// Border colors
-$border-color: #e0dfff; // Default border color
-$border-color-dark: #403e6a; // Border color for dark mode
+$customize-btn-bg: rgba(255, 255, 255, 0.15);
+$customize-btn-hover-bg: rgba(255, 255, 255, 0.25);
+$customize-btn-border: rgba(255, 255, 255, 0.3);
 
-// Shadow color
-$shadow-color: #3c3c431a; // Shadow base color for light and dark mode
-$shadow-color-dark: #8f8f8f1a; // Shadow base color for light and dark mode
+$box-shadow: rgba(173, 178, 212, 0.3);
+$box-shadow-hover: rgba(173, 178, 212, 0.4);
 
-// Gradients
-$acent-gradient-dark: linear-gradient(
-  90deg,
-  #b392f0 0%,
-  #a676ff 100%
-); // Dark mode accent gradient
-$acent-gradient: linear-gradient(
-  90deg,
-  #6f42c1 0%,
-  #925df3 100%
-); // Light mode accent gradient
+$transition: all 0.3s ease;
 
-$faint-gradient: radial-gradient(circle, #bfe0f8 0%, #e9ebff 46%, #e2acff 100%);
-$faint-gradient-dark: radial-gradient(circle, #31373b 0%, #48494b 46%, #52415c 100%);
 
 // ========================================================================
 // Typography
@@ -107,9 +92,9 @@ $z-index-ui-highest: 50; // Highest priority elements (e.g., notifications, load
 // ========================================================================
 
 // Box shadow variables
-$box-shadow-light: 0px 2px 4px $shadow-color; // Light shadow
-$box-shadow-medium: 0px 4px 8px $shadow-color; // Medium shadow
-$box-shadow-heavy: 0px 8px 16px $shadow-color; // Heavy shadow
+// $box-shadow-light: 0px 2px 4px $shadow-color; // Light shadow
+// $box-shadow-medium: 0px 4px 8px $shadow-color; // Medium shadow
+// $box-shadow-heavy: 0px 8px 16px $shadow-color; // Heavy shadow
 
 // ========================================================================
 // Border Radius
@@ -121,3 +106,9 @@ $border-radius-medium: 6px; // Medium rounded corners
 $border-radius-large: 12px; // Large rounded corners
 $border-radius-circle: 50%; // Fully circular
 $border-radius-extra-large: 20px; // Extra-large rounded corners
+
+
+
+
+// base.scss
+

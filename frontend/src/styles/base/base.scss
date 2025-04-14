@@ -1,74 +1,66 @@
 @use "../abstracts/variables" as *; // abstracts/variables.scss
 
-// Light theme styles
+// base.scss
+
+@use "../abstracts/variables" as *;
+
+@use "../abstracts/variables" as *;
+
+/* Light Theme */
 [data-theme="light"] {
-  // Text and Input colors
-  --text-color: #{$text-color}; // Main text color for light theme
-  --text-disabled: #{$text-disabled}; // Disabled text color
-  --input-text-color: #{$input-text-color}; // Input field text color
+  // Text
+  --text-color: #{$text-color};
+  --light-text: #{$light-text};
 
-  // Accent and Highlight colors
-  --primary-color: #{$background-color}; // Primary color for light theme
-  --accent-color: #{$accent-color}; // Primary accent color for light theme
-  --highlight-accent-color: #{$highlight-accent-color}; // Highlight color for light theme
-  --accent-gradient-color: #{$acent-gradient}; // Primary accent color for light theme
-  --faint-gradient-color: #{$faint-gradient};
+  // Accent colors
+  --accent-color: #{$accent-color};
+  --primary-color: #{$primary-color};
+  --secondary-color: #{$secondary-color};
+  --accent-gradient: linear-gradient(135deg, #{$accent-color}, #{$secondary-color});
 
-  // Background colors
-  --background-color: #{$background-color}; // Main background color
-  --background-color-secondary: #{$background-color-secondary}; // Secondary background color
-  --background-color-gray: #{$background-color-gray}; // Secondary background color
+  // Inputs
+  --input-bg: #{$input-bg};
+  --input-border: #{$input-border};
+  --input-shadow: #{$input-shadow};
 
-  // Border colors
-  --border-color: #{$border-color}; // Border color for light theme
+  // Customize button
+  --customize-btn-bg: #{$customize-btn-bg};
+  --customize-btn-hover-bg: #{$customize-btn-hover-bg};
+  --customize-btn-border: #{$customize-btn-border};
 
-  // Shadow variables
-  --shadow-main-light: #{$shadow-color}; // Main shadow color
-  --box-shadow-light: 0px 2px 4px var(--shadow-main-light); // Light shadow
-  --box-shadow-medium: 0px 4px 8px var(--shadow-main-light); // Medium shadow
-  --box-shadow-heavy: 0px 8px 16px var(--shadow-main-light); // Heavy shadow
-
-  // Font families
-  --font-inter: #{$font-inter}; // Inter font family
-  --font-josefin-sans: #{$font-josefin-sans}; // Josefin Sans font family
-  --font-poppins: #{$font-poppins}; // Poppins font family
-  --font-roboto: #{$font-roboto}; // Roboto font family
+  // Shadows
+  --box-shadow: 0 4px 15px #{$box-shadow};
+  --box-shadow-hover: 0 6px 20px #{$box-shadow-hover};
 }
 
-// Dark theme styles
+/* Dark Theme */
 [data-theme="dark"] {
-  // Text and Input colors
-  --text-color: #{$text-color-dark}; // Main text color for dark theme
-  --text-disabled: #{$text-disabled-dark}; // Disabled text color
-  --input-text-color: #{$input-text-color-dark}; // Input field text color
+  // Text
+  --text-color: #{$light-text};
+  --light-text: #{$text-color}; // Optional swap if you want darker accents on light elements
 
-  // Accent and Highlight colors
-  --primary-color: #{$highlight-accent-color-dark};
-  --accent-color: #{$accent-color-dark}; // Primary accent color for dark theme
-  --highlight-accent-color: #{$highlight-accent-color-dark}; // Highlight color for dark theme
-  --accent-gradient-color: #{$acent-gradient-dark}; // Primary accent color for light theme
-  --faint-gradient-color: #{$faint-gradient-dark};
+  // Accent colors
+  --accent-color: #{$accent-color};
+  --primary-color: #{$primary-color};
+  --secondary-color: #{$secondary-color};
+  --accent-gradient: linear-gradient(135deg, #{$accent-color}, #{$secondary-color});
 
-  // Background colors
-  --background-color: #{$background-color-dark}; // Main background color
-  --background-color-secondary: #{$background-color-secondary-dark}; // Secondary background color
-  --background-color-gray: #{$background-color-gray-dark}; // Secondary background color
+  // Inputs
+  --input-bg: rgba(30, 30, 30, 0.9);
+  --input-border: rgba(255, 255, 255, 0.1);
+  --input-shadow: rgba(0, 0, 0, 0.4);
 
-  // Border colors
-  --border-color: #{$border-color-dark}; // Border color for dark theme
+  // Customize button
+  --customize-btn-bg: #{$customize-btn-bg};
+  --customize-btn-hover-bg: #{$customize-btn-hover-bg};
+  --customize-btn-border: #{$customize-btn-border};
 
-  // Shadow variables
-  --shadow-main-dark: #{$shadow-color}; // Main shadow color
-  --box-shadow-light: 0px 2px 4px var(--shadow-main-dark); // Light shadow
-  --box-shadow-medium: 0px 4px 8px var(--shadow-main-dark); // Medium shadow
-  --box-shadow-heavy: 0px 8px 16px var(--shadow-main-dark); // Heavy shadow
-
-  // Font families
-  --font-inter: #{$font-inter}; // Inter font family
-  --font-josefin-sans: #{$font-josefin-sans}; // Josefin Sans font family
-  --font-poppins: #{$font-poppins}; // Poppins font family
-  --font-roboto: #{$font-roboto}; // Roboto font family
+  // Shadows
+  --box-shadow: 0 4px 15px #{$box-shadow};
+  --box-shadow-hover: 0 6px 20px #{$box-shadow-hover};
 }
+
+
 
 // Root container styles
 #root {
