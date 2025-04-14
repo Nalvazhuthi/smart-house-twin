@@ -1,27 +1,40 @@
-import React from 'react'
+import React from 'react';
 
-const WelcomeScreen = () => {
+
+const WelcomeScreen = ({ onExplore }) => {
     return (
         <div className="welcome-screen">
             <div className="welcome-box">
-                <h1>Welcome to SmartHome Twin</h1>
-                <p>
-                    Step into the future of home automation with <strong>SmartHome Twin</strong> —
-                    a virtual 3D replica of your smart home powered by Tuya devices.
+                <div className="welcome-header">
+                    <h1>SmartHome Twin</h1>
+                    <div className="divider"></div>
+                    <p className="subtitle">Your Digital Residence</p>
+                </div>
+                
+                <p className="intro-text">
+                    Experience the future of home automation with our virtual twin technology, 
+                    seamlessly integrating with your Tuya ecosystem.
                 </p>
-                <ul>
-                    <li>🧭 Explore your home in a fully interactive 3D space</li>
-                    <li>📐 Create and customize rooms with precise dimensions</li>
-                    <li>💡 Simulate and manage Tuya smart devices in real time</li>
+                
+                <ul className="features-list">
+                    <li><span className="feature-icon">🖥️</span> Immersive 3D home visualization</li>
+                    <li><span className="feature-icon">📱</span> Real-time device control interface</li>
+                    <li><span className="feature-icon">🏠</span> Architectural precision modeling</li>
+                    <li><span className="feature-icon">🌙</span> Smart scene automation</li>
+                    <li><span className="feature-icon">📊</span> Energy consumption analytics</li>
                 </ul>
-                <p>
-                    Ready to design your digital home?
-                </p>
-                <button onClick={() => setExplore(true)}>Explore</button>
+                
+                <button className="explore-btn" onClick={onExplore}>
+                    Enter Your Digital Home
+                    <span className="arrow">→</span>
+                </button>
+                
+                <div className="footer-note">
+                    Premium home automation experience
+                </div>
             </div>
         </div>
+    );
+};
 
-    )
-}
-
-export default WelcomeScreen
+export default WelcomeScreen;
