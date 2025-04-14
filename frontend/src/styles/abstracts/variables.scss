@@ -1,0 +1,123 @@
+/* ========================================================================
+   Global SCSS Variables
+   ========================================================================
+   This file contains the global variables used across the project for
+   colors, typography, spacing, shadows, and other design tokens.
+   ======================================================================== */
+
+@use "functions";
+
+// ========================================================================
+// Font Imports
+// ========================================================================
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
+// ========================================================================
+// Colors
+// ========================================================================
+
+// Text colors
+$text-color: #2b3344; // Primary text color
+$text-disabled: #b7b7c6; // Disabled text color
+$input-text-color: #595965; // Input field text color
+
+$text-color-dark: #f3f3fd; // Primary text color for dark mode
+$text-disabled-dark: #6f6f7a; // Disabled text color for dark mode
+$input-text-color-dark: #b5b5c8; // Input field text color for dark mode
+
+// Accent colors
+$accent-color: #6f42c1; // Primary accent color
+$accent-color-dark: #c4abf1; // Primary accent color for dark mode
+$highlight-accent-color: #e0dfff; // Highlighted accent for light mode
+$highlight-accent-color-dark: #403e6a; // Highlighted accent for dark mode
+
+// Background colors
+$background-color: #fcfdfd; // Main background color
+$background-color-dark: #19191d; // Main background color for dark mode
+$background-color-secondary: #e1e0ff80; // Secondary background color
+$background-color-secondary-dark: #39394f99; // Secondary background color for dark mode
+$background-color-gray: #f3f3f3; // Main background color
+$background-color-gray-dark: #232323; // Main background color for dark mode
+
+// Border colors
+$border-color: #e0dfff; // Default border color
+$border-color-dark: #403e6a; // Border color for dark mode
+
+// Shadow color
+$shadow-color: #3c3c431a; // Shadow base color for light and dark mode
+$shadow-color-dark: #8f8f8f1a; // Shadow base color for light and dark mode
+
+// Gradients
+$acent-gradient-dark: linear-gradient(
+  90deg,
+  #b392f0 0%,
+  #a676ff 100%
+); // Dark mode accent gradient
+$acent-gradient: linear-gradient(
+  90deg,
+  #6f42c1 0%,
+  #925df3 100%
+); // Light mode accent gradient
+
+$faint-gradient: radial-gradient(circle, #bfe0f8 0%, #e9ebff 46%, #e2acff 100%);
+$faint-gradient-dark: radial-gradient(circle, #31373b 0%, #48494b 46%, #52415c 100%);
+
+// ========================================================================
+// Typography
+// ========================================================================
+
+// Font Family Variables
+$font-inter: "Inter", sans-serif; // Inter font
+$font-josefin-sans: "Josefin Sans", sans-serif; // Josefin Sans font
+$font-poppins: "Poppins", sans-serif; // Poppins font
+$font-roboto: "Roboto", sans-serif; // Roboto font
+
+// Font sizes (converted to rem using a utility function)
+$tiny: 0.625rem; // Extra small text (10px)
+$small: 0.75rem; // Small text (12px)
+$regular: 0.8rem; // Default text size (14px)
+$large: 1rem; // Large text size (16px)
+$xlarge: 1.125rem; // Extra large text size (18px)
+$xxlarge: 1.5rem; // Double extra large text size (24px)
+$xxxlarge: 2rem; // Triple extra large text size (32px)
+
+// Font weights
+$thin-weight: 300; // Regular font weight
+$regular-weight: 400; // Regular font weight
+$medium-weight: 500; // Medium font weight
+$bold-weight: 600; // Bold font weight
+
+// ========================================================================
+// Z-Index Levels
+// ========================================================================
+
+// Z-index variables for layering
+$z-index-drei-html: 1; // For drei's Html components
+$z-index-default: 1; // For drei's Html components
+$z-index-marketplace: 2; // For drei's Html components
+$z-index-tools: 3; // For drei's Html components
+$z-index-negative: -1; // For drei's Html components
+$z-index-ui-base: 10; // Base UI elements
+$z-index-ui-overlay: 20; // Overlay UI elements (e.g., modals, tooltips)
+$z-index-ui-popup: 30; // Popups, dialogs, or higher-priority UI elements
+$z-index-ui-highest: 50; // Highest priority elements (e.g., notifications, loading screens)
+
+// ========================================================================
+// Shadows
+// ========================================================================
+
+// Box shadow variables
+$box-shadow-light: 0px 2px 4px $shadow-color; // Light shadow
+$box-shadow-medium: 0px 4px 8px $shadow-color; // Medium shadow
+$box-shadow-heavy: 0px 8px 16px $shadow-color; // Heavy shadow
+
+// ========================================================================
+// Border Radius
+// ========================================================================
+
+// Border radius variables
+$border-radius-small: 4px; // Small rounded corners
+$border-radius-medium: 6px; // Medium rounded corners
+$border-radius-large: 12px; // Large rounded corners
+$border-radius-circle: 50%; // Fully circular
+$border-radius-extra-large: 20px; // Extra-large rounded corners

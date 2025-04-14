@@ -1,0 +1,19 @@
+// abstracts
+@use 'abstracts/variables';
+@use 'abstracts/mixins';
+@use 'abstracts/placeholders';
+@use 'abstracts/functions';
+
+// base
+@use 'base/reset';
+@use 'base/typography';
+@use 'base/base';
+
+// components
+@use 'components/welcomeScreen';
+
+
+// layout
+
+
+// pages

@@ -1,0 +1,85 @@
+// Define color variables
+$primary-color: #1abc9c;
+$primary-hover: #16a085;
+$text-color: #2c3e50;
+$secondary-text: #34495e;
+$background-gradient: linear-gradient(135deg, #e2f3f5, #f8fbfd);
+
+.content-container {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  background: $background-gradient;
+
+  .welcome-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+
+    .welcome-box {
+      text-align: center;
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        color: $text-color;
+      }
+
+      p {
+        font-size: 1.1rem;
+        margin-bottom: 16px;
+        color: $secondary-text;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin-bottom: 20px;
+
+        li {
+          margin: 8px 0;
+          font-size: 1rem;
+          color: darken($secondary-text, 5%);
+        }
+      }
+
+      button {
+        padding: 12px 24px;
+        font-size: 1rem;
+        background-color: $primary-color;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+
+        &:hover {
+          background-color: $primary-hover;
+        }
+      }
+    }
+  }
+
+  .customize-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 8px 16px;
+    font-size: 1rem;
+    background-color: $primary-color;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $primary-hover;
+    }
+  }
+}

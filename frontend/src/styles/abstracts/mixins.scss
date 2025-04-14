@@ -1,0 +1,33 @@
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin flex-space-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+// Array of base colors
+$colors: (
+  #f5550b,
+  #1bac1b,
+  #0099ff,
+  #d4c927,
+  #8400ff, 
+  #13e9b3, 
+  #df1dcf 
+);
+
+@mixin gradient-by-child($index) {
+  // Get the color based on the index passed
+  $base-color: nth($colors, $index);
+  // Apply gradient using the same color with different alpha values
+  background: linear-gradient(
+    144.19deg,
+    rgba($base-color, 0.2) 16.62%,  // 20% opacity
+    rgba($base-color, 0.08) 85.81%   // 80% opacity
+  );
+}

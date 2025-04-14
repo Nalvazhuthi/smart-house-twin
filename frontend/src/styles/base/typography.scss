@@ -1,0 +1,8 @@
+// Global Typography Styles
+* {
+  // Setting default font family
+  font-family: var(--font-inter), sans-serif;
+  font-weight: var(--font-weight-regular); // Default font weight
+  font-size: var(--font-size-regular); // Default font size
+  color: var(--text-color); // Default text color
+}

@@ -1,0 +1,139 @@
+@use "../abstracts/variables" as *; // abstracts/variables.scss
+
+// Light theme styles
+[data-theme="light"] {
+  // Text and Input colors
+  --text-color: #{$text-color}; // Main text color for light theme
+  --text-disabled: #{$text-disabled}; // Disabled text color
+  --input-text-color: #{$input-text-color}; // Input field text color
+
+  // Accent and Highlight colors
+  --primary-color: #{$background-color}; // Primary color for light theme
+  --accent-color: #{$accent-color}; // Primary accent color for light theme
+  --highlight-accent-color: #{$highlight-accent-color}; // Highlight color for light theme
+  --accent-gradient-color: #{$acent-gradient}; // Primary accent color for light theme
+  --faint-gradient-color: #{$faint-gradient};
+
+  // Background colors
+  --background-color: #{$background-color}; // Main background color
+  --background-color-secondary: #{$background-color-secondary}; // Secondary background color
+  --background-color-gray: #{$background-color-gray}; // Secondary background color
+
+  // Border colors
+  --border-color: #{$border-color}; // Border color for light theme
+
+  // Shadow variables
+  --shadow-main-light: #{$shadow-color}; // Main shadow color
+  --box-shadow-light: 0px 2px 4px var(--shadow-main-light); // Light shadow
+  --box-shadow-medium: 0px 4px 8px var(--shadow-main-light); // Medium shadow
+  --box-shadow-heavy: 0px 8px 16px var(--shadow-main-light); // Heavy shadow
+
+  // Font families
+  --font-inter: #{$font-inter}; // Inter font family
+  --font-josefin-sans: #{$font-josefin-sans}; // Josefin Sans font family
+  --font-poppins: #{$font-poppins}; // Poppins font family
+  --font-roboto: #{$font-roboto}; // Roboto font family
+}
+
+// Dark theme styles
+[data-theme="dark"] {
+  // Text and Input colors
+  --text-color: #{$text-color-dark}; // Main text color for dark theme
+  --text-disabled: #{$text-disabled-dark}; // Disabled text color
+  --input-text-color: #{$input-text-color-dark}; // Input field text color
+
+  // Accent and Highlight colors
+  --primary-color: #{$highlight-accent-color-dark};
+  --accent-color: #{$accent-color-dark}; // Primary accent color for dark theme
+  --highlight-accent-color: #{$highlight-accent-color-dark}; // Highlight color for dark theme
+  --accent-gradient-color: #{$acent-gradient-dark}; // Primary accent color for light theme
+  --faint-gradient-color: #{$faint-gradient-dark};
+
+  // Background colors
+  --background-color: #{$background-color-dark}; // Main background color
+  --background-color-secondary: #{$background-color-secondary-dark}; // Secondary background color
+  --background-color-gray: #{$background-color-gray-dark}; // Secondary background color
+
+  // Border colors
+  --border-color: #{$border-color-dark}; // Border color for dark theme
+
+  // Shadow variables
+  --shadow-main-dark: #{$shadow-color}; // Main shadow color
+  --box-shadow-light: 0px 2px 4px var(--shadow-main-dark); // Light shadow
+  --box-shadow-medium: 0px 4px 8px var(--shadow-main-dark); // Medium shadow
+  --box-shadow-heavy: 0px 8px 16px var(--shadow-main-dark); // Heavy shadow
+
+  // Font families
+  --font-inter: #{$font-inter}; // Inter font family
+  --font-josefin-sans: #{$font-josefin-sans}; // Josefin Sans font family
+  --font-poppins: #{$font-poppins}; // Poppins font family
+  --font-roboto: #{$font-roboto}; // Roboto font family
+}
+
+// Root container styles
+#root {
+  height: 100vh; // Full viewport height
+  width: 100vw; // Full viewport width
+  overflow: hidden; // Prevent scrollbars
+  background-color: var(--background-color-gray);
+}
+
+// Root overlay styles
+#root-over {
+  position: fixed; // Fix overlay to the viewport
+  top: 0; // Align to the top
+  left: 0; // Align to the left
+  z-index: 99; // Ensure high stacking order
+}
+
+body {
+  background: var(--background-color);
+
+  /* Font Sizes */
+  --font-size-tiny: #{$tiny}; // Extra small text
+  --font-size-small: #{$small}; // Small text
+  --font-size-regular: #{$regular}; // Default text size
+  --font-size-large: #{$large}; // Large text size
+  --font-size-xlarge: #{$xlarge}; // Extra large text size
+  --font-size-xxlarge: #{$xxlarge}; // Double extra large text size
+  --font-size-xxxlarge: #{$xxxlarge}; // Triple extra large text size
+
+  /* Font Weights */
+  --font-weight-regular: #{$regular-weight}; // Regular font weight
+  --font-weight-medium: #{$medium-weight}; // Medium font weight
+  --font-weight-bold: #{$bold-weight}; // Bold font weight
+}
+
+/* Apply custom scrollbar styles globally */
+::-webkit-scrollbar {
+  width: 8px;
+  /* Width of the scrollbar */
+  height: 8px;
+  /* Height for horizontal scrollbars */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  /* Background of the scrollbar track */
+  border-radius: 4px;
+  /* Rounded corners */
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-color);
+  /* Scrollbar handle color */
+  border-radius: 4px;
+  /* Rounded corners */
+  border: 2px solid var(--primary-color);
+  /* Padding around the scrollbar handle */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-color);
+  /* Handle color on hover */
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+  /* Remove corner styling for scrollable containers */
+}

@@ -1,0 +1,68 @@
+/smart-home-twin
+├── backend/                # Backend API and server logic
+│   ├── src/
+│   │   ├── controllers/    # Handlers for API routes
+│   │   ├── models/         # Database schemas/models
+│   │   ├── routes/         # API routes (e.g., /sensor-data, /user)
+│   │   ├── services/       # Business logic (e.g., MQTT data ingestion)
+│   │   ├── utils/          # Utility functions (e.g., JWT helpers)
+│   │   └── app.js          # Entry point for the backend
+│   ├── config/             # Configuration files (e.g., database, environment variables)
+│   ├── .env                # Environment variables
+│   ├── package.json        # Node.js dependencies
+│   └── Dockerfile          # Docker setup for backend
+│
+├── frontend/               # Frontend web application
+│   ├── public/             # Static assets (e.g., favicon, images)
+│   ├── src/
+│   │   ├── assets/         # Images, icons, fonts, etc.
+│   │   ├── components/     # Reusable UI components (e.g., Button, Card)
+│   │   ├── pages/          # Page-level components (e.g., Dashboard, Settings)
+│   │   ├── services/       # API calls and data fetching logic
+│   │   ├── styles/         # CSS or styled-components
+│   │   ├── App.js          # Main application component
+│   │   └── index.js        # Entry point of the app
+│   ├── package.json        # Frontend dependencies
+│   └── Dockerfile          # Docker setup for frontend
+│
+├── mobile/                 # Optional: Mobile app (React Native or Flutter)
+│   ├── src/
+│   │   ├── screens/        # Screens/pages for the mobile app
+│   │   ├── components/     # Reusable components
+│   │   ├── services/       # API integration and business logic
+│   │   ├── assets/         # Icons, images, etc.
+│   │   └── App.js          # Entry point for the mobile app
+│   ├── android/            # Android-specific files (Flutter/React Native)
+│   ├── ios/                # iOS-specific files (Flutter/React Native)
+│   └── package.json        # Mobile app dependencies
+│
+├── database/               # Database-related files
+│   ├── migrations/         # Database migration scripts
+│   ├── seeds/              # Seed data for development/testing
+│   └── schemas/            # Database schema definitions
+│
+├── iot/                    # IoT device integration
+│   ├── mqtt-broker/        # MQTT broker configuration (if self-hosted)
+│   ├── scripts/            # Scripts for simulating IoT devices (e.g., Python/Raspberry Pi scripts)
+│   └── README.md           # Documentation for IoT setup
+│
+├── tests/                  # Automated tests
+│   ├── unit/               # Unit tests for individual components/functions
+│   ├── integration/        # Integration tests for APIs and workflows
+│   ├── e2e/                # End-to-end tests (e.g., Cypress)
+│   └── mocks/              # Mock data for testing
+│
+├── docs/                   # Documentation
+│   ├── architecture.md     # High-level architecture overview
+│   ├── api-docs.md         # API documentation
+│   ├── deployment.md       # Deployment instructions
+│   └── user-guide.md       # User guide for the application
+│
+├── .github/                # GitHub Actions workflows
+│   └── workflows/
+│       ├── ci.yml          # Continuous Integration pipeline
+│       └── cd.yml          # Continuous Deployment pipeline
+│
+├── docker-compose.yml      # Docker Compose for local development
+├── README.md               # Project overview and setup instructions
+└── .gitignore              # Files/folders to ignore in version control
