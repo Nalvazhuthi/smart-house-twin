@@ -1,21 +1,32 @@
 // abstracts
-@use 'abstracts/variables';
-@use 'abstracts/mixins';
-@use 'abstracts/placeholders';
-@use 'abstracts/functions';
+@use "abstracts/variables";
+@use "abstracts/mixins";
+@use "abstracts/placeholders";
+@use "abstracts/functions";
 
 // base
-@use 'base/reset';
-@use 'base/typography';
-@use 'base/base';
+@use "base/reset";
+@use "base/typography";
+@use "base/base";
 
 // components
-@use 'components/welcomeScreen';
-@use 'components/roomSetupPage';
-@use 'components/bluePrintUI';
-
+@use "components/welcomeScreen";
+@use "components/roomSetupPage";
+@use "components/bluePrintUI";
 
 // layout
 
-
 // pages
+
+// tools-wrapper
+.tools-wrapper {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 10;
+  background-color: red;
+  padding: 20px 20px ;
+  display: flex;
+  gap: 50px;
+}
