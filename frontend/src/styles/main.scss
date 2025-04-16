@@ -38,20 +38,32 @@
   right: 30px;
   cursor: pointer;
   background-color: rgb(47, 195, 240);
-
 }
 
-.help-panel{
+.help-panel {
   width: 200px;
 }
 
-.dimension-indicator, .room-label {
+.dimension-indicator,
+.room-label {
   pointer-events: none;
 }
 
-.room-label{
-  width: 150px !important;
-  height: 100px !important;
-  cursor: pointer;
-  z-index: 1000;
+.html-element {
+  width: auto;
+  min-width: 150px;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+
+  padding: 10px 20px;
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+  align-items: center;
+  gap: 4px; /* Optional: space between the lines */
+
+  background-color: #ffffff; /* White background */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Soft shadow */
+  border-radius: 8px; /* Optional: rounded corners for a cleaner look */
+
 }
