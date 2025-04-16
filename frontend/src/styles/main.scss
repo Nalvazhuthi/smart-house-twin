@@ -25,8 +25,33 @@
   left: 50%;
   transform: translate(-50%, 0);
   z-index: 10;
-  background-color: red;
-  padding: 20px 20px ;
+  background-color: rgb(47, 195, 240);
+  padding: 20px 20px;
   display: flex;
   gap: 50px;
+}
+
+.explore-3d {
+  position: absolute;
+  padding: 20px 10px;
+  top: 10px;
+  right: 30px;
+  cursor: pointer;
+  background-color: rgb(47, 195, 240);
+
+}
+
+.help-panel{
+  width: 200px;
+}
+
+.dimension-indicator, .room-label {
+  pointer-events: none;
+}
+
+.room-label{
+  width: 150px !important;
+  height: 100px !important;
+  cursor: pointer;
+  z-index: 1000;
 }
