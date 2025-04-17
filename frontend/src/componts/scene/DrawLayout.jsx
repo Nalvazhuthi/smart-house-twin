@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { Html, OrbitControls, OrthographicCamera, PerspectiveCamera } from "@react-three/drei";
 import { DrawingTool } from "./DrawingTool";
 
-const DrawLayout = ({ drawingMode, isEditMode = false }) => {
+const DrawLayout = ({ setDrawingMode, drawingMode, isEditMode = false }) => {
     const [is3DView, setIs3DView] = useState(false);
 
     const gridParams = {
@@ -29,19 +29,48 @@ const DrawLayout = ({ drawingMode, isEditMode = false }) => {
     return (
         <>
             <Canvas onContextMenu={(e) => e.preventDefault()}>
-                {/* GridHelper with custom parameters */}
-                <CustomGridHelper {...gridParams} is3DView={is3DView} />
+                {/* <Suspense fallback={null}> */}
+                    {/* GridHelper with custom parameters */}
+                    {is3DView ? (
+                        <PerspectiveCamera
+                            makeDefault
+                            fov={75}
+                            position={[10, 10, 10]}
+                            onUpdate={(self) => self.lookAt(0, 0, 0)}
+                        />
+                    ) : (
+                        <OrthographicCamera
+                            makeDefault
+                            zoom={75}
+                            position={[0, 10, 0]}
+                            onUpdate={(self) => {
+                                self.lookAt(0, 0, 0);
+                                self.up.set(0, 0, 1);
+                            }}
+                        />
+                    )}
+                    <CustomGridHelper {...gridParams} is3DView={is3DView} />
 
-                <ambientLight intensity={0.5} />
-                <pointLight position={[10, 10, 10]} />
+                    <ambientLight intensity={0.5} />
+                    <pointLight position={[10, 10, 10]} />
 
-                <DrawingTool
-                    drawingMode={is3DView ? null : drawingMode}
-                    isEditMode={isEditMode}
-                    is3DView={is3DView}
-                />
+                    <DrawingTool
+                        DrawingTool={DrawingTool}
+                        drawingMode={is3DView ? null : drawingMode}
+                        isEditMode={isEditMode}
+                        is3DView={is3DView}
+                    />
 
-                <OrbitControls enableRotate={is3DView} enableZoom={true} enablePan={true} />
+                    {/* <OrbitControls
+                        enableRotate={is3DView}
+                        enableZoom={true}
+                        enablePan={true}
+                        maxPolarAngle={is3DView ? Math.PI / 2.1 : undefined}
+                        minPolarAngle={is3DView ? 0 : undefined}
+                        maxDistance={is3DView ? 10 : undefined}
+                        minDistance={is3DView ? 5 : undefined}
+                    /> */}
+                {/* </Suspense> */}
             </Canvas>
 
             <button

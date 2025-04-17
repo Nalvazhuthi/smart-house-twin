@@ -3,6 +3,13 @@ import { Html } from "@react-three/drei";
 import React, { useState, useEffect } from "react";
 import { useThree } from "@react-three/fiber";
 
+export const CONSTANTS = {
+  wallConfig: {
+    height: 2.5, // Wall height in meters
+    width: 0.2,  // Wall thickness in meters
+  },
+};
+
 export const DrawingTool = ({ drawingMode, isEditMode, is3DView }) => {
   // State management
   const [rooms, setRooms] = useState([]);
@@ -15,37 +22,20 @@ export const DrawingTool = ({ drawingMode, isEditMode, is3DView }) => {
   const [currentMousePos, setCurrentMousePos] = useState(null);
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [selectedVeranda, setSelectedVeranda] = useState(null);
+  const [draggedPointIndex, setDraggedPointIndex] = useState(null); // For dragging room points
   const { camera, size, set } = useThree();
+  const [hoveredWall, setHoveredWall] = useState(null);
 
-  // Camera setup
   useEffect(() => {
-    if (is3DView) {
-      const perspectiveCamera = new THREE.PerspectiveCamera(
-        75,
-        size.width / size.height,
-        0.1,
-        1000
-      );
-      perspectiveCamera.position.set(10, 10, 10);
-      perspectiveCamera.lookAt(0, 0, 0);
-      set({ camera: perspectiveCamera });
-    } else {
-      const aspect = size.width / size.height;
-      const zoom = 10;
-      const orthoCamera = new THREE.OrthographicCamera(
-        -zoom * aspect,
-        zoom * aspect,
-        zoom,
-        -zoom,
-        0.1,
-        1000
-      );
-      orthoCamera.position.set(0, 10, 0);
-      orthoCamera.lookAt(0, 0, 0);
-      orthoCamera.up = new THREE.Vector3(0, 0, 1);
-      set({ camera: orthoCamera });
+    if (selectedRoom) {
+      // Find by ID instead of object reference
+      const updatedRoom = rooms.find(room => room.id === selectedRoom.id);
+      if (updatedRoom) {
+        setSelectedRoom(updatedRoom);
+      }
     }
-  }, [is3DView, size, set]);
+  }, [rooms, selectedRoom?.id]); // Watch for ID changes instead of points
+
 
   // Generate walls from rooms
   const generateWallsFromRooms = () => {
@@ -75,7 +65,6 @@ export const DrawingTool = ({ drawingMode, isEditMode, is3DView }) => {
     const gridLines = [];
     const bounds = calculateRoomBounds(veranda.points);
     const gridSize = 0.5;
-
     // Horizontal grid lines
     for (let z = bounds.minZ; z <= bounds.maxZ; z += gridSize) {
       gridLines.push({
@@ -85,7 +74,6 @@ export const DrawingTool = ({ drawingMode, isEditMode, is3DView }) => {
         isGrid: true,
       });
     }
-
     // Vertical grid lines
     for (let x = bounds.minX; x <= bounds.maxX; x += gridSize) {
       gridLines.push({
@@ -95,7 +83,6 @@ export const DrawingTool = ({ drawingMode, isEditMode, is3DView }) => {
         isGrid: true,
       });
     }
-
     return gridLines;
   };
 
@@ -112,6 +99,7 @@ export const DrawingTool = ({ drawingMode, isEditMode, is3DView }) => {
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (event) => {
+
       if (event.key === "Escape") {
         if (polygonPoints.length > 0) {
           setPolygonPoints([]);
@@ -189,14 +177,12 @@ export const DrawingTool = ({ drawingMode, isEditMode, is3DView }) => {
       maxX = -Infinity;
     let minZ = Infinity,
       maxZ = -Infinity;
-
     points.forEach((point) => {
       minX = Math.min(minX, point.x);
       maxX = Math.max(maxX, point.x);
       minZ = Math.min(minZ, point.z);
       maxZ = Math.max(maxZ, point.z);
     });
-
     return { minX, maxX, minZ, maxZ };
   };
 
@@ -204,10 +190,8 @@ export const DrawingTool = ({ drawingMode, isEditMode, is3DView }) => {
     const [labelWidth, labelHeight] = labelSize;
     const halfWidth = labelWidth / 2;
     const halfHeight = labelHeight / 2;
-
     let adjustedX = center.x;
     let adjustedZ = center.z;
-
     if (adjustedX - halfWidth < bounds.minX)
       adjustedX = bounds.minX + halfWidth;
     if (adjustedX + halfWidth > bounds.maxX)
@@ -216,14 +200,12 @@ export const DrawingTool = ({ drawingMode, isEditMode, is3DView }) => {
       adjustedZ = bounds.minZ + halfHeight;
     if (adjustedZ + halfHeight > bounds.maxZ)
       adjustedZ = bounds.maxZ - halfHeight;
-
     return new THREE.Vector3(adjustedX, 0, adjustedZ);
   };
 
   // Shape creation functions
   const completePolygon = () => {
     if (polygonPoints.length < 3) return;
-
     const firstPoint = polygonPoints[0];
     const lastPoint = polygonPoints[polygonPoints.length - 1];
     const shouldClose = firstPoint.distanceTo(lastPoint) > 0.5;
@@ -231,15 +213,14 @@ export const DrawingTool = ({ drawingMode, isEditMode, is3DView }) => {
       ? [...polygonPoints, firstPoint]
       : polygonPoints;
     const area = calculateArea(finalizedPoints);
-
     if (area > 0.1) {
       const center = calculateRoomCenter(finalizedPoints);
       const bounds = calculateRoomBounds(finalizedPoints);
-
       if (drawingMode === "veranda-polygon") {
         setVerandas((prev) => [
           ...prev,
           {
+            id: Date.now(), // Add unique ID
             points: finalizedPoints,
             area,
             center,
@@ -251,6 +232,7 @@ export const DrawingTool = ({ drawingMode, isEditMode, is3DView }) => {
         setRooms((prev) => [
           ...prev,
           {
+            id: Date.now(), // Add unique ID
             points: finalizedPoints,
             area,
             center,
@@ -275,7 +257,6 @@ export const DrawingTool = ({ drawingMode, isEditMode, is3DView }) => {
     const area = calculateArea(rectPoints);
     const center = calculateRoomCenter(rectPoints);
     const bounds = calculateRoomBounds(rectPoints);
-
     if (drawingMode === "veranda-rectangle") {
       setVerandas((prev) => [
         ...prev,
@@ -314,50 +295,67 @@ export const DrawingTool = ({ drawingMode, isEditMode, is3DView }) => {
     return shape;
   };
 
-  // Rendering functions
-  const renderRooms = () => {
-    return rooms.map((room, index) => {
-      const shape = createShapeFromPoints(room.points);
-      const geometry = new THREE.ShapeGeometry(shape);
-      const bounds = calculateRoomBounds(room.points);
-      const center = calculateRoomCenter(room.points);
-      const adjustedPos = adjustLabelPosition([1.5, 1.0], bounds, center);
-      const isSelected = room === selectedRoom;
+  const isValidPolygon = (points) => {
+    return points.length >= 3 && calculateArea(points) > 0;
+  };
 
-      return (
-        <group key={`room-${index}`}>
-          <mesh
-            geometry={geometry}
-            rotation={[Math.PI * 0.5, 0, 0]}
-            position={[0, 0.01, 0]}
-          >
-            <meshStandardMaterial
-              color={isSelected ? "#ff9999" : "#ff6666"}
-              side={THREE.DoubleSide}
-              transparent
-              opacity={0.7}
-              roughness={0.7}
-              metalness={0.1}
-            />
-          </mesh>
-          <Html position={[adjustedPos.x, 0.02, adjustedPos.z]}>
-            <div
-              className="room-label"
-              style={{
-                background: "rgba(255, 102, 102, 0.8)",
-                padding: "4px 8px",
-                borderRadius: "4px",
-                fontSize: "12px",
-                color: "white",
-              }}
+  const renderRooms = () => {
+    return rooms
+      .filter((room) => isValidPolygon(room.points)) // Filter out invalid rooms
+      .map((room) => {
+        const shape = createShapeFromPoints(room.points);
+        const geometry = new THREE.ShapeGeometry(shape);
+        const bounds = calculateRoomBounds(room.points);
+        const center = calculateRoomCenter(room.points);
+        const adjustedPos = adjustLabelPosition([1.5, 1.0], bounds, center);
+        const isSelected = room === selectedRoom;
+        return (
+          <group key={`room-${room.id}`}>
+            {/* Render only if the geometry is valid */}
+            {isValidPolygon(room.points) && (
+              <mesh
+                geometry={geometry}
+                rotation={[Math.PI * 0.5, 0, 0]}
+                position={[0, 0.01, 0]}
+              >
+                <meshStandardMaterial
+                  color={isSelected ? "#ff9999" : "#ff6666"}
+                  side={THREE.DoubleSide}
+                  transparent
+                  opacity={0.7}
+                  roughness={0.7}
+                  metalness={0.1}
+                />
+              </mesh>
+            )}
+            <Html
+              position={[adjustedPos.x, 0.02, adjustedPos.z]}
+              occlude
             >
-              <div>{room.name}</div>
-              <div>{room.area.toFixed(2)} m²</div>
-            </div>
-          </Html>
-        </group>
-      );
-    });
+              <div
+                className="room-label"
+                style={{
+                  background: "rgba(255, 102, 102, 0.8)",
+                  padding: "4px 8px",
+                  borderRadius: "4px",
+                  fontSize: "12px",
+                  color: "white",
+                  cursor: "pointer",
+                  pointerEvents: "auto",
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedRoom(room);
+                  setSelectedVeranda(null);
+                }}
+              >
+                <div>{room.name}</div>
+                <div>{room.area.toFixed(2)} m²</div>
+              </div>
+            </Html>
+          </group>
+        );
+      });
   };
 
   const renderVerandas = () => {
@@ -366,31 +364,9 @@ export const DrawingTool = ({ drawingMode, isEditMode, is3DView }) => {
       const center = calculateRoomCenter(veranda.points);
       const adjustedPos = adjustLabelPosition([1.5, 1.0], bounds, center);
       const isSelected = veranda === selectedVeranda;
-
-      // Create a shape from veranda points
-      const shape = new THREE.Shape();
-      shape.moveTo(veranda.points[0].x, veranda.points[0].z);
-      for (let i = 1; i < veranda.points.length; i++) {
-        shape.lineTo(veranda.points[i].x, veranda.points[i].z);
-      }
-      shape.lineTo(veranda.points[0].x, veranda.points[0].z);
-
-      // Extrude settings
-      const extrudeSettings = {
-        steps: 1,
-        depth: 0.2, // Thickness of the veranda floor
-        bevelEnabled: false,
-      };
-
-      // Create extruded geometry
-      const extrudedGeometry = new THREE.ExtrudeGeometry(
-        shape,
-        extrudeSettings
-      );
-
       return (
         <group key={`veranda-${index}`}>
-          {/* 3D Extruded Grid Lines */}
+          {/* Veranda grid lines */}
           {is3DView &&
             generateVerandaGrid(veranda).map((line, i) => {
               const length = line.start.distanceTo(line.end);
@@ -401,15 +377,13 @@ export const DrawingTool = ({ drawingMode, isEditMode, is3DView }) => {
                 line.end.z - line.start.z,
                 line.end.x - line.start.x
               );
-
               return (
                 <mesh
                   key={`grid-${index}-${i}`}
                   position={[midpoint.x, 0.1, midpoint.z]}
                   rotation={[0, -angle, 0]}
                 >
-                  <boxGeometry args={[length, 0.05, 0.05]} />{" "}
-                  {/* Width, Height, Depth */}
+                  <boxGeometry args={[length, 0.05, 0.05]} />
                   <meshStandardMaterial
                     color={0xcccccc}
                     side={THREE.DoubleSide}
@@ -419,41 +393,7 @@ export const DrawingTool = ({ drawingMode, isEditMode, is3DView }) => {
                 </mesh>
               );
             })}
-
-          {/* 2D Grid Lines (for 2D view) */}
-          {!is3DView && (
-            <group>
-              {generateVerandaGrid(veranda).map((line, i) => (
-                <line key={`grid-${index}-${i}`}>
-                  <bufferGeometry
-                    attach="geometry"
-                    attributes={{
-                      position: new THREE.BufferAttribute(
-                        new Float32Array([
-                          line.start.x,
-                          0,
-                          line.start.z,
-                          line.end.x,
-                          0,
-                          line.end.z,
-                        ]),
-                        3
-                      ),
-                    }}
-                  />
-                  <lineBasicMaterial
-                    attach="material"
-                    color={0x888888}
-                    linewidth={1}
-                    transparent
-                    opacity={0.5}
-                  />
-                </line>
-              ))}
-            </group>
-          )}
-
-          {/* Label */}
+          {/* Veranda label */}
           <Html position={[adjustedPos.x, 0.02, adjustedPos.z]}>
             <div
               className="veranda-label"
@@ -472,42 +412,37 @@ export const DrawingTool = ({ drawingMode, isEditMode, is3DView }) => {
       );
     });
   };
+
   const renderWalls = () => {
     return walls.map((wall, index) => {
-      // Skip veranda walls in 3D view
       if (is3DView && wall.isVeranda) return null;
-
-      const start = wall.start;
-      const end = wall.end;
+      const { start, end, layer = 1 } = wall; // Ensure wall has a layer property
 
       if (is3DView) {
         const length = start.distanceTo(end);
-        const wallHeight = 2.5;
-        const wallThickness = 0.2;
+        const wallHeight = 2;
+        const wallThickness = 0.1;
 
+        // Create shape matching loadWalls' dimensions
         const shape = new THREE.Shape();
-        shape.moveTo(-length / 2, -wallHeight / 2);
-        shape.lineTo(length / 2, -wallHeight / 2);
-        shape.lineTo(length / 2, wallHeight / 2);
-        shape.lineTo(-length / 2, wallHeight / 2);
-        shape.lineTo(-length / 2, -wallHeight / 2);
+        shape.moveTo(0, 0);
+        shape.lineTo(length, 0);
+        shape.lineTo(length, wallHeight);
+        shape.lineTo(0, wallHeight);
+        shape.closePath();
 
         const geometry = new THREE.ExtrudeGeometry(shape, {
-          steps: 1,
           depth: wallThickness,
           bevelEnabled: false,
         });
 
-        const midpoint = new THREE.Vector3()
-          .addVectors(start, end)
-          .multiplyScalar(0.5);
         const angle = Math.atan2(end.z - start.z, end.x - start.x);
 
         return (
           <mesh
             key={`3d-wall-${index}`}
             geometry={geometry}
-            position={[midpoint.x, wallHeight / 2, midpoint.z]}
+            position={[start.x, (layer - 1) * wallHeight, start.z]}
             rotation={[0, -angle, 0]}
           >
             <meshStandardMaterial
@@ -519,7 +454,7 @@ export const DrawingTool = ({ drawingMode, isEditMode, is3DView }) => {
           </mesh>
         );
       } else {
-        // 2D rendering
+        // Keep 2D rendering logic unchanged
         return (
           <line key={`2d-wall-${index}`}>
             <bufferGeometry
@@ -533,9 +468,7 @@ export const DrawingTool = ({ drawingMode, isEditMode, is3DView }) => {
             />
             <lineBasicMaterial
               attach="material"
-              color={
-                wall.isGrid ? 0x888888 : wall.isVeranda ? 0xf5deb3 : "black"
-              }
+              color={wall.isGrid ? 0x888888 : wall.isVeranda ? 0xf5deb3 : "black"}
               linewidth={wall.isGrid ? 1 : 2}
               transparent={wall.isGrid}
               opacity={wall.isGrid ? 0.5 : 1}
@@ -590,7 +523,6 @@ export const DrawingTool = ({ drawingMode, isEditMode, is3DView }) => {
     const previewPoints = [...polygonPoints];
     if (currentMousePos) previewPoints.push(currentMousePos);
     if (previewPoints.length >= 3) previewPoints.push(previewPoints[0]);
-
     return (
       <line>
         <bufferGeometry
@@ -651,14 +583,99 @@ export const DrawingTool = ({ drawingMode, isEditMode, is3DView }) => {
     );
   };
 
+  // Render draggable points for selected room
+  const renderSelectedRoomPoints = () => {
+    if (!selectedRoom) return null;
+
+    const roomIndex = rooms.indexOf(selectedRoom);
+    return selectedRoom.points.map((point, index) => (
+      <mesh
+        key={`editable-point-${roomIndex}-${index}`} // Unique key based on room and point index
+        position={[point.x, 0.2, point.z]}
+        onPointerDown={(e) => {
+          e.stopPropagation();
+          setDraggedPointIndex(index);
+        }}
+      >
+        <sphereGeometry args={[0.2, 16, 16]} />
+        <meshBasicMaterial color="red" />
+      </mesh>
+    ));
+  };
+
+  const getRoomsSharingPoint = (point) => {
+    return [...rooms, ...verandas].filter((space) =>
+      space.points.some((p) => p.equals(point))
+    );
+  };
+
+  // Handle dragging of points
+  useEffect(() => {
+    if (draggedPointIndex === null || !selectedRoom) return;
+
+    const handleMouseMove = (event) => {
+      const worldPosition = getWorldPosition(event);
+      const snappedPosition = gridSnappingEnabled
+        ? snapToNearbyRooms(snapToGrid(worldPosition))
+        : worldPosition;
+
+      // Find all rooms sharing the dragged point
+      const sharingRooms = getRoomsSharingPoint(selectedRoom.points[draggedPointIndex]);
+
+      setRooms((prevRooms) =>
+        prevRooms.map((room) => {
+          if (sharingRooms.includes(room)) {
+            const updatedPoints = [...room.points];
+            updatedPoints[draggedPointIndex] = snappedPosition;
+            return {
+              ...room,
+              points: updatedPoints,
+              area: calculateArea(updatedPoints),
+              center: calculateRoomCenter(updatedPoints),
+              bounds: calculateRoomBounds(updatedPoints),
+            };
+          }
+          return room;
+        })
+      );
+
+      setVerandas((prevVerandas) =>
+        prevVerandas.map((veranda) => {
+          if (sharingRooms.includes(veranda)) {
+            const updatedPoints = [...veranda.points];
+            updatedPoints[draggedPointIndex] = snappedPosition;
+            return {
+              ...veranda,
+              points: updatedPoints,
+              area: calculateArea(updatedPoints),
+              center: calculateRoomCenter(updatedPoints),
+              bounds: calculateRoomBounds(updatedPoints),
+            };
+          }
+          return veranda;
+        })
+      );
+    };
+
+    window.addEventListener("pointermove", handleMouseMove);
+    return () => {
+      window.removeEventListener("pointermove", handleMouseMove);
+    };
+  }, [draggedPointIndex, selectedRoom?.id]);
   // Event handlers
   const handleMouseDown = (event) => {
+    const isLabelClick = event.nativeEvent.target.closest(
+      ".room-label, .veranda-label"
+    );
+    if (isLabelClick) return;
+
     if (is3DView) return;
+
+
     const worldPosition = getWorldPosition(event);
     const snappedPosition = gridSnappingEnabled
       ? snapToNearbyRooms(snapToGrid(worldPosition))
       : worldPosition;
-
     if (
       event.button === 2 &&
       (drawingMode === "polygon" || drawingMode === "veranda-polygon")
@@ -667,7 +684,48 @@ export const DrawingTool = ({ drawingMode, isEditMode, is3DView }) => {
       return;
     }
     if (event.button !== 0) return;
+    // Add point mode
+    if (drawingMode === "addPoint" && hoveredWall) {
+      const { room, insertIndex, position } = hoveredWall;
 
+      if (room) {
+
+        if (!selectedRoom) return null;
+        const updatedPoints = [...room.points];
+        updatedPoints.splice(insertIndex, 0, position);
+
+        if (rooms.some(r => r.id === room.id)) {
+          setRooms(prevRooms =>
+            prevRooms.map(r =>
+              r.id === room.id
+                ? {
+                  ...r,
+                  points: updatedPoints,
+                  area: calculateArea(updatedPoints),
+                  center: calculateRoomCenter(updatedPoints),
+                  bounds: calculateRoomBounds(updatedPoints)
+                }
+                : r
+            )
+          );
+        } else if (verandas.some(v => v.id === room.id)) {
+          setVerandas(prevVerandas =>
+            prevVerandas.map(v =>
+              v.id === room.id
+                ? {
+                  ...v,
+                  points: updatedPoints,
+                  area: calculateArea(updatedPoints),
+                  center: calculateRoomCenter(updatedPoints),
+                  bounds: calculateRoomBounds(updatedPoints)
+                }
+                : v
+            )
+          );
+        }
+      }
+      return;
+    }
     if (
       (drawingMode === "polygon" || drawingMode === "veranda-polygon") &&
       polygonPoints.length >= 2
@@ -678,7 +736,6 @@ export const DrawingTool = ({ drawingMode, isEditMode, is3DView }) => {
         return;
       }
     }
-
     if (drawingMode === "rectangle" || drawingMode === "veranda-rectangle") {
       setStartPoint(snappedPosition);
       setIsDragging(true);
@@ -687,7 +744,79 @@ export const DrawingTool = ({ drawingMode, isEditMode, is3DView }) => {
     }
   };
 
+  // Find closest wall segment to mouse position
+  const findClosestWallSegment = (position) => {
+    let closestWall = null;
+    let closestDistance = Infinity;
+    let closestPosition = null;
+    let closestRoom = null;
+    let insertIndex = -1;
+
+    // Check rooms
+    rooms.forEach((room) => {
+      for (let i = 0; i < room.points.length; i++) {
+        const nextIndex = (i + 1) % room.points.length;
+        const start = room.points[i];
+        const end = room.points[nextIndex];
+
+        const line = new THREE.Line3(
+          new THREE.Vector3(start.x, 0, start.z),
+          new THREE.Vector3(end.x, 0, end.z)
+        );
+
+        const closestPoint = new THREE.Vector3();
+        line.closestPointToPoint(position, true, closestPoint);
+        const distance = position.distanceTo(closestPoint);
+
+        if (distance < 1.0 && distance < closestDistance) {
+          closestDistance = distance;
+          closestWall = { start, end };
+          closestPosition = closestPoint;
+          closestRoom = room;
+          insertIndex = nextIndex;
+        }
+      }
+    });
+
+    // Check verandas
+    verandas.forEach((veranda) => {
+      for (let i = 0; i < veranda.points.length; i++) {
+        const nextIndex = (i + 1) % veranda.points.length;
+        const start = veranda.points[i];
+        const end = veranda.points[nextIndex];
+
+        const line = new THREE.Line3(
+          new THREE.Vector3(start.x, 0, start.z),
+          new THREE.Vector3(end.x, 0, end.z)
+        );
+
+        const closestPoint = new THREE.Vector3();
+        line.closestPointToPoint(position, true, closestPoint);
+        const distance = position.distanceTo(closestPoint);
+
+        if (distance < 1.0 && distance < closestDistance) {
+          closestDistance = distance;
+          closestWall = { start, end };
+          closestPosition = closestPoint;
+          closestRoom = veranda;
+          insertIndex = nextIndex;
+        }
+      }
+    });
+
+    return closestWall
+      ? { wall: closestWall, position: closestPosition, room: closestRoom, insertIndex }
+      : null;
+  };
+
+
+
   const handleMouseMove = (event) => {
+    const isLabelClick = event.nativeEvent.target.closest(
+      ".room-label, .veranda-label"
+    );
+    if (isLabelClick) return;
+
     if (is3DView) return;
     const worldPosition = getWorldPosition(event);
     const snappedPosition = gridSnappingEnabled
@@ -697,9 +826,23 @@ export const DrawingTool = ({ drawingMode, isEditMode, is3DView }) => {
     if (isDragging && startPoint) {
       setEndPoint(snappedPosition);
     }
+
+    // Wall segment detection for addPoint mode
+    if (drawingMode === "addPoint") {
+      console.log('drawingMode: ', drawingMode);
+      const closest = findClosestWallSegment(snappedPosition);
+      setHoveredWall(closest);
+    } else {
+      setHoveredWall(null);
+    }
   };
 
-  const handleMouseUp = () => {
+  const handleMouseUp = (event) => {
+    const isLabelClick = event.nativeEvent.target.closest(
+      ".room-label, .veranda-label"
+    );
+    if (isLabelClick) return;
+
     if (is3DView || !isDragging || !startPoint || !endPoint) return;
     if (drawingMode === "rectangle" || drawingMode === "veranda-rectangle") {
       finalizeRectangle();
@@ -709,30 +852,72 @@ export const DrawingTool = ({ drawingMode, isEditMode, is3DView }) => {
     setEndPoint(null);
   };
 
+
+  const renderWallSegmentHighlight = () => {
+    if (!selectedRoom) return null;
+
+    if (drawingMode !== "addPoint" || !hoveredWall || is3DView) return null;
+
+
+    return (
+      <>
+        {/* Highlight the wall segment */}
+        <line>
+          <bufferGeometry
+            attach="geometry"
+            attributes={{
+              position: new THREE.BufferAttribute(
+                new Float32Array([
+                  hoveredWall.wall.start.x, 0, hoveredWall.wall.start.z,
+                  hoveredWall.wall.end.x, 0, hoveredWall.wall.end.z
+                ]),
+                3
+              ),
+            }}
+          />
+          <lineBasicMaterial
+            attach="material"
+            color="yellow"
+            linewidth={4}
+          />
+        </line>
+
+        {/* Preview point */}
+        <mesh position={[hoveredWall.position.x, 0.2, hoveredWall.position.z]}>
+          <sphereGeometry args={[0.15, 16, 16]} />
+          <meshBasicMaterial color="yellow" transparent opacity={0.8} />
+        </mesh>
+      </>
+    );
+  };
+
+
   return (
     <>
       {/* Walls */}
       {renderWalls()}
-
       {/* Rooms */}
       {renderRooms()}
-
       {/* Verandas */}
       {renderVerandas()}
-
       {/* Selection highlights */}
-      {selectedRoom?.points.map((point, i) => (
+      {/* {selectedRoom?.points.map((point, i) => (
         <mesh key={`room-point-${i}`} position={[point.x, 0.2, point.z]}>
           <sphereGeometry args={[0.2, 16, 16]} />
           <meshBasicMaterial color="red" />
         </mesh>
-      ))}
+      ))} */}
       {selectedVeranda?.points.map((point, i) => (
         <mesh key={`veranda-point-${i}`} position={[point.x, 0.2, point.z]}>
           <sphereGeometry args={[0.2, 16, 16]} />
           <meshBasicMaterial color="#FFA07A" />
         </mesh>
       ))}
+      {/* Draggable points for selected room */}
+      {!is3DView && renderSelectedRoomPoints()}
+
+      {/* Wall segment highlight and preview */}
+      {renderWallSegmentHighlight()}
 
       {/* Drawing previews */}
       {!is3DView && (
@@ -745,7 +930,6 @@ export const DrawingTool = ({ drawingMode, isEditMode, is3DView }) => {
           {renderDashedLinePreview()}
         </>
       )}
-
       {/* Invisible plane for interaction */}
       <mesh
         onPointerDown={handleMouseDown}
@@ -760,3 +944,8 @@ export const DrawingTool = ({ drawingMode, isEditMode, is3DView }) => {
     </>
   );
 };
+
+
+// "@react-three/drei": "^9.113.0",
+// Before pressing explore 3d user should select a room after pressed explore camera should smoothly move to the selected room and then the user can start exploring the room iin 3d view
+// If user havenot selected a room then camera should move to the room 1 or and then the user can start exploring the room in 3d view

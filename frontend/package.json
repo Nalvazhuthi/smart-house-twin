@@ -4,8 +4,7 @@
   "private": true,
   "homepage": ".",
   "dependencies": {
-    "@ant-design/icons": "^6.0.0",
-    "@react-three/drei": "^9.14.3",
+    "@react-three/drei": "^10.0.6",
     "@react-three/fiber": "^8.0.26",
     "@react-three/postprocessing": "^2.4.4",
     "@testing-library/jest-dom": "^5.16.4",
